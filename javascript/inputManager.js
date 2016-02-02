@@ -8,6 +8,7 @@ function InputManager(canvas, verbose){
 	var im = {
         canvas: canvas,
         onMouse: onMouse,
+        onTouch: onTouch,
         onKey: onKey,
         subscribe: subscribe,
         subscribers: InputList(),
