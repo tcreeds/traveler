@@ -77,6 +77,8 @@ function onTouch(event, state){
     event.preventDefault();
     this.lastMousePosition.x = this.mousePosition.x;
     this.lastMousePosition.y = this.mousePosition.y;
+    if (event.targetTouches.length == 0)
+        return;
     var touch = event.targetTouches[0];
 	var x = touch.pageX + document.body.scrollLeft + document.documentElement.scrollLeft - Math.floor(this.canvas.offsetLeft);
 	var y = touch.pageY + document.body.scrollTop + document.documentElement.scrollTop - Math.floor(this.canvas.offsetTop) + 1;
