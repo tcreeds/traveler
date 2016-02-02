@@ -25,6 +25,7 @@ function InputManager(canvas, verbose){
     canvas.addEventListener('mousemove', function(event){ im.onMouse(event, 2)});
     canvas.addEventListener('touchstart', function(event){ im.onTouch(event, 1); });
     canvas.addEventListener('touchend', function(event){ im.onTouch(event, 0); });
+    canvas.addEventListener('touchcancel', function(event){ im.onTouch(event, 0); });
     canvas.addEventListener('touchmove', function(event){ im.onTouch(event, 2)});
 	window.addEventListener('keydown', function(event){ im.onKey(event, 1); });
 	window.addEventListener('keyup', function(event){ im.onKey(event, 0); });
