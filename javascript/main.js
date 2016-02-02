@@ -17,7 +17,7 @@ function init(){
     
     input = new InputManager(document.querySelector("canvas"));
     input.subscribe("mouseup", onClick, window);
-    input.subscribe("touchend", onClick, window)
+    input.subscribe("touchstart", onClick, window)
     input.subscribe("mousemove", onMouseMove, window);
     requestAnimFrame(animate);
     toMenu();
