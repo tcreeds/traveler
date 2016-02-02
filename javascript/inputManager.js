@@ -18,8 +18,8 @@ function InputManager(canvas, verbose){
                 mousePosition: { x: 0, y: 0 },
                 lastMousePosition: { x: 0, y: 0 }
 	};
-	canvas.addEventListener('mousedown', function(event){ im.onMouse(event, 1); });
-	canvas.addEventListener('mouseup', function(event){ im.onMouse(event, 0); });
+	canvas.addEventListener('mousedown touchstart', function(event){ im.onMouse(event, 1); });
+	canvas.addEventListener('mouseup touchend', function(event){ im.onMouse(event, 0); });
     canvas.addEventListener('mousemove', function(event){ im.onMouse(event, 2)});
 	window.addEventListener('keydown', function(event){ im.onKey(event, 1); });
 	window.addEventListener('keyup', function(event){ im.onKey(event, 0); });
