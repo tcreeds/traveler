@@ -75,7 +75,6 @@ function onMouse(event, state){
 
 function onTouch(event, state){
     event = event || window.event;
-    event.preventDefault();
     this.lastMousePosition.x = this.mousePosition.x;
     this.lastMousePosition.y = this.mousePosition.y;
     if (event.targetTouches.length == 0)
