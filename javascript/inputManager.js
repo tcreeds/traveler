@@ -6,27 +6,30 @@
 
 function InputManager(canvas, verbose){
 	var im = {
-                canvas: canvas,
-                onMouse: onMouse,
-                onKey: onKey,
-                subscribe: subscribe,
-                subscribers: InputList(),
-                inputState: InitInputState(),
-                getInputState: getInputState,
-                subIndex: 0,
-                verbose: verbose,
-                mousePosition: { x: 0, y: 0 },
-                lastMousePosition: { x: 0, y: 0 }
+        canvas: canvas,
+        onMouse: onMouse,
+        onKey: onKey,
+        subscribe: subscribe,
+        subscribers: InputList(),
+        inputState: InitInputState(),
+        getInputState: getInputState,
+        subIndex: 0,
+        verbose: verbose,
+        mousePosition: { x: 0, y: 0 },
+        lastMousePosition: { x: 0, y: 0 },
+        mousePressed: false
 	};
 	canvas.addEventListener('mousedown', function(event){ im.onMouse(event, 1); });
 	canvas.addEventListener('mouseup', function(event){ im.onMouse(event, 0); });
-    canvas.addEventListener('touchstart', function(event){ im.onMouse(event, 1); });
-    canvas.addEventListener('touchend', function(event){ im.onMouse(event, 0); });
     canvas.addEventListener('mousemove', function(event){ im.onMouse(event, 2)});
+    canvas.addEventListener('touchstart', function(event){ im.onTouch(event, 1); });
+    canvas.addEventListener('touchend', function(event){ im.onTouch(event, 0); });
+    canvas.addEventListener('touchmove', function(event){ im.onTouch(event, 2)});
 	window.addEventListener('keydown', function(event){ im.onKey(event, 1); });
 	window.addEventListener('keyup', function(event){ im.onKey(event, 0); });
     canvas.addEventListener('mouseleave', function(event){
         im.lastMousePosition = { x: undefined, y: undefined }; 
+        im.mousePressed = false;
     });
     canvas.addEventListener('mouseenter', function(event){
         im.lastMousePosition = { 
@@ -48,11 +51,13 @@ function onMouse(event, state){
     this.mousePosition.x = x;
     this.mousePosition.y = y;
     if (state == 1){
+        this.mousePressed = true;
         for (var i = 0; i < this.subscribers['mousedown'].length; i++){
             this.subscribers['mousedown'][i].func.call(this.subscribers['mousedown'][i].object, event, x, y);
         }
     }
     else if (state == 0){
+        this.mousePressed = false;
         for (var i = 0; i < this.subscribers['mouseup'].length; i++){
             this.subscribers['mouseup'][i].func.call(this.subscribers['mouseup'][i].object, event, x, y);
         }
@@ -62,6 +67,37 @@ function onMouse(event, state){
         var movementY = this.mousePosition.y - this.lastMousePosition.y;
         for (var i = 0; i < this.subscribers['mousemove'].length; i++){
             this.subscribers['mousemove'][i].func.call(this.subscribers['mousemove'][i].object, event, movementX, movementY);
+        }
+    }
+}
+
+function onTouch(event, state){
+    event = event || window.event;
+    event.preventDefault();
+    this.lastMousePosition.x = this.mousePosition.x;
+    this.lastMousePosition.y = this.mousePosition.y;
+    var touch = event.targetTouches[0];
+	var x = touch.pageX + document.body.scrollLeft + document.documentElement.scrollLeft - Math.floor(this.canvas.offsetLeft);
+	var y = touch.pageY + document.body.scrollTop + document.documentElement.scrollTop - Math.floor(this.canvas.offsetTop) + 1;
+    this.mousePosition.x = x;
+    this.mousePosition.y = y;
+    if (state == 1){
+        this.mousePressed = true;
+        for (var i = 0; i < this.subscribers['touchstart'].length; i++){
+            this.subscribers['touchstart'][i].func.call(this.subscribers['touchstart'][i].object, event, x, y);
+        }
+    }
+    else if (state == 0){
+        this.mousePressed = false;
+        for (var i = 0; i < this.subscribers['touchend'].length; i++){
+            this.subscribers['touchend'][i].func.call(this.subscribers['touchend'][i].object, event, x, y);
+        }
+    }
+    else if (state == 2){
+        var movementX = this.mousePosition.x - this.lastMousePosition.x;
+        var movementY = this.mousePosition.y - this.lastMousePosition.y;
+        for (var i = 0; i < this.subscribers['touchmove'].length; i++){
+            this.subscribers['touchmove'][i].func.call(this.subscribers['touchmove'][i].object, event, movementX, movementY);
         }
     }
 }

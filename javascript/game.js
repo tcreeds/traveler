@@ -49,7 +49,7 @@ function update(){
     time = currentTime;
     var inputState = input.inputState;
     
-    if (inputState.space && gameRunning){
+    if ((inputState.space || inputState.mousePressed) && gameRunning){
         bird.velocity.y += 0.008 * dt;
     }
     
