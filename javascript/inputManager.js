@@ -77,6 +77,12 @@ function onTouch(event, state){
     event = event || window.event;
     this.lastMousePosition.x = this.mousePosition.x;
     this.lastMousePosition.y = this.mousePosition.y;
+    if (state == 0){
+        this.mousePressed = false;
+        for (var i = 0; i < this.subscribers['touchend'].length; i++){
+            this.subscribers['touchend'][i].func.call(this.subscribers['touchend'][i].object, event);
+        }
+    }
     if (event.targetTouches.length == 0)
         return;
     var touch = event.targetTouches[0];
@@ -85,18 +91,14 @@ function onTouch(event, state){
     this.mousePosition.x = x;
     this.mousePosition.y = y;
     if (state == 1){
+        event.preventDefault();
         this.mousePressed = true;
         for (var i = 0; i < this.subscribers['touchstart'].length; i++){
             this.subscribers['touchstart'][i].func.call(this.subscribers['touchstart'][i].object, event, x, y);
         }
     }
-    else if (state == 0){
-        this.mousePressed = false;
-        for (var i = 0; i < this.subscribers['touchend'].length; i++){
-            this.subscribers['touchend'][i].func.call(this.subscribers['touchend'][i].object, event, x, y);
-        }
-    }
     else if (state == 2){
+        event.preventDefault();
         var movementX = this.mousePosition.x - this.lastMousePosition.x;
         var movementY = this.mousePosition.y - this.lastMousePosition.y;
         for (var i = 0; i < this.subscribers['touchmove'].length; i++){
